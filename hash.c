@@ -37,7 +37,7 @@ unsigned long fnv1a(unsigned char *str) {
 	return hash;
 }
 
-void init_hashtable(struct Hashtable *table) {
+void hash_init(struct Hashtable *table) {
 	table->size = INITIAL_SIZE;
 	table->stored = 0;
 	table->keys = malloc(sizeof(char*) * INITIAL_SIZE);
@@ -46,15 +46,15 @@ void init_hashtable(struct Hashtable *table) {
 	for (int i = 0; i < INITIAL_SIZE; ++i) table->values[i] = NULL;
 }
 
-void add_to_hashtable(struct Hashtable *table, char *key, double value) {
+void hash_add(struct Hashtable *table, char *key, double value) {
 	double load_factor = (double) table->stored / table->size;
 	char* a_key = concat("", key);
 
 	if (DEBUG) printf("load_factor %f\n", load_factor);
 
-	if (load_factor >= 0.7) expand_hashtable(table);
+	if (load_factor >= 0.7) hash_expand(table);
 
-	struct Node *check = get_node_from_hashtable(table, key);
+	struct Node *check = hash_getn(table, key);
 
 	if (check != NULL) check->value = value;
 	else {
@@ -67,12 +67,11 @@ void add_to_hashtable(struct Hashtable *table, char *key, double value) {
 		table->keys[table->stored] = a_key;
 		++(table->stored);
 	}
-	
 }
 
-int expand_hashtable(struct Hashtable *table) {
+int hash_expand(struct Hashtable *table) {
 	if (DEBUG) printf("Expanding hashtable.\n");
-	int n_size = table->size * 2;
+	int n_size = next_prime(table->size * 2);
 	struct Node **n_values = malloc(sizeof(struct Node*) * n_size);
 	char **n_keys = malloc(sizeof(char*) * n_size);
 
@@ -80,7 +79,7 @@ int expand_hashtable(struct Hashtable *table) {
 
 	for (int i = 0; i < table->stored; ++i) {
 		int ni = hash_function(table->keys[i]) % n_size;
-		struct Node *node = get_node_from_hashtable(table, table->keys[i]);
+		struct Node *node = hash_getn(table, table->keys[i]);
 
 		if (node == NULL) {
 			if (DEBUG) printf("Could not expand hash table.\n");
@@ -101,7 +100,7 @@ int expand_hashtable(struct Hashtable *table) {
 	return 0;
 }
 
-struct Node *get_node_from_hashtable(struct Hashtable *table, char *key) {
+struct Node *hash_getn(struct Hashtable *table, char *key) {
 	if (DEBUG) printf("Getting node %s.\n", key);
 	int i = hash_function(key) % table->size;
 
@@ -116,8 +115,8 @@ struct Node *get_node_from_hashtable(struct Hashtable *table, char *key) {
 	return curr;
 }
 
-double get_value_from_hashtable(struct Hashtable *table, char *key) {
-	struct Node *curr = get_node_from_hashtable(table, key);
+double hash_getv(struct Hashtable *table, char *key) {
+	struct Node *curr = hash_getn(table, key);
 	return curr == NULL ? 0 : curr->value;
 }
 
@@ -126,7 +125,7 @@ void prepend(struct Node **head, struct Node *new) {
 	*head = new;
 }
 
-int remove_from_hashtable(struct Hashtable *table, char *key) {
+int hash_remove(struct Hashtable *table, char *key) {
 	if (DEBUG) printf("Removing node %s.\n", key);
 	int i = hash_function(key) % table->size;
 	struct Node *prev, *curr;
@@ -142,6 +141,37 @@ int remove_from_hashtable(struct Hashtable *table, char *key) {
 	else {
 		prev->next = curr->next;
 	}
+	free(curr);
 
 	return 0;
+}
+
+bool is_prime(int n) {
+	if (n == 2) return true;
+	if (n == 3) return true;
+	if (n % 2 == 0) return false;
+	if (n % 3 == 0) return false;
+
+	int i = 5;
+	int w = 2;
+
+	while (i*i <= n) { // would it be better to calculate sqrt of n?
+		if (n % i == 0) return false;
+		i += w;
+		w = 6-w; // alterns between 2 and 4, skipping multiples of 2 and 3
+	}
+
+	return true;
+}
+
+int next_prime(int n) {
+	if (n%2==0) ++n;
+	else n+=2;
+
+	int w = 2;
+	while (true) {
+		if (is_prime(n)) return n;
+		n += w;
+		w = 6-w;
+	}
 }
