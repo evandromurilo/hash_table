@@ -10,7 +10,6 @@ struct Hashtable {
 	int size;
 	int stored;
 	struct Node **values;
-	char **keys;
 };
 
 struct Node {
