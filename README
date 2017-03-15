@@ -1,4 +1,5 @@
 STR TO DOUBLE HASH TABLE
 
 Author: Evandro Murilo
+
 Description: My first attempt at implementing a hash table, it maps strings to double values. Written in C.
