@@ -34,12 +34,14 @@ int main(void) {
 			case ADD:
 				printf("Enter KEY VALUE: \n");
 				if (scanf("%s %lf", key, &value) <= 0) dup2(stdin_copy, stdin_n);
-				hash_add(&table, key, value);
+				double *n_value = malloc(sizeof(double));
+				*n_value = value;
+				hash_add(&table, key, n_value);
 				break;
 			case CHECK:
 				printf("Enter KEY: \n");
 				scanf("%s", key);
-				printf("%f\n", hash_getv(&table, key));
+				printf("%f\n", *((double *) hash_getv(&table, key)));
 				break;
 			case REMOVE:
 				printf("Enter KEY: \n");
@@ -54,7 +56,7 @@ int main(void) {
 					printf("%d: ", i);
 					int chain = 0;
 					for (struct Node *node = table.values[i]; node != NULL; node = node->next) {
-						printf("%.2f (%s), ", node->value, node->key);
+						printf("%.2f (%s), ", *((double *)(node->value)), node->key);
 						++chain;
 					}
 

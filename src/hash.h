@@ -19,7 +19,7 @@ struct Hashtable {
 };
 
 struct Node {
-	double value;
+	void *value;
 	char *key;
 	struct Node *next;
 };
@@ -47,7 +47,7 @@ void hash_init(struct Hashtable *table);
 void hash_expand(struct Hashtable *table);
 
 // hash_add: adds key-value to the hashtable
-void hash_add(struct Hashtable *table, char *key, double value);
+void hash_add(struct Hashtable *table, char *key, void *value);
 
 // hash_getn: gets a node from the hashtable
 // returns NULL if key is not present
@@ -55,7 +55,7 @@ struct Node *hash_getn(struct Hashtable *table, char *key);
 
 // hash_getv: gets a value from the hashtable
 // returns 0.0 if key is not present
-double hash_getv(struct Hashtable *table, char *key);
+void *hash_getv(struct Hashtable *table, char *key);
 
 // prepend: sets new->next to head, then swaps head for new
 void prepend(struct Node **head, struct Node *new);

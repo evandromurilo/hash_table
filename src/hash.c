@@ -43,7 +43,7 @@ void hash_init(struct Hashtable *table) {
 	for (int i = 0; i < INITIAL_SIZE; ++i) table->values[i] = NULL;
 }
 
-void hash_add(struct Hashtable *table, char *key, double value) {
+void hash_add(struct Hashtable *table, char *key, void *value) {
 	double load_factor = (double) table->stored / table->size;
 	char* a_key = concat("", key);
 
@@ -104,7 +104,7 @@ struct Node *hash_getn(struct Hashtable *table, char *key) {
 	return curr;
 }
 
-double hash_getv(struct Hashtable *table, char *key) {
+void *hash_getv(struct Hashtable *table, char *key) {
 	struct Node *curr = hash_getn(table, key);
 	return curr == NULL ? 0 : curr->value;
 }
@@ -131,6 +131,7 @@ int hash_remove(struct Hashtable *table, char *key) {
 		prev->next = curr->next;
 	}
 
+	free(curr->value);
 	free(curr->key);
 	free(curr);
 	--(table->stored);
