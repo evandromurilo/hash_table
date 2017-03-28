@@ -10,7 +10,7 @@ int main(void) {
 	char key[100];
 	double value;
 	int choice;
-	struct Hashtable table;
+	struct Hashtable *table = hash_init();
 	int stdin_n = fileno(stdin);
 	int stdin_copy = dup(stdin_n);
 
@@ -18,8 +18,6 @@ int main(void) {
 		perror("Could not open file");
 		return 1;
 	}
-
-	hash_init(&table);
 
 	while (true) {
 		printf("0. add\n");
@@ -36,26 +34,26 @@ int main(void) {
 				if (scanf("%s %lf", key, &value) <= 0) dup2(stdin_copy, stdin_n);
 				double *n_value = malloc(sizeof(double));
 				*n_value = value;
-				hash_add(&table, key, n_value);
+				hash_add(table, key, n_value);
 				break;
 			case CHECK:
 				printf("Enter KEY: \n");
 				scanf("%s", key);
-				printf("%f\n", *((double *) hash_getv(&table, key)));
+				printf("%f\n", *((double *) hash_getv(table, key)));
 				break;
 			case REMOVE:
 				printf("Enter KEY: \n");
 				scanf("%s", key);
-				hash_remove(&table, key);
+				free(hash_remove(table, key));
 				break;
 			case STATUS:
 				printf(" "); // who knows why
 				int biggest_chain = 0;
 
-				for (int i = 0; i < table.size; ++i) {
+				for (int i = 0; i < table->size; ++i) {
 					printf("%d: ", i);
 					int chain = 0;
-					for (struct Node *node = table.values[i]; node != NULL; node = node->next) {
+					for (struct HashNode *node = table->values[i]; node != NULL; node = node->next) {
 						printf("%.2f (%s), ", *((double *)(node->value)), node->key);
 						++chain;
 					}
@@ -64,9 +62,9 @@ int main(void) {
 					putchar('\n');
 				}
 
-				printf("\nSize: %d\n", table.size);
-				printf("Stored: %d\n", table.stored);
-				printf("Load factor: %f\n", (double)table.stored/table.size);
+				printf("\nSize: %d\n", table->size);
+				printf("Stored: %d\n", table->stored);
+				printf("Load factor: %f\n", (double)table->stored/table->size);
 				printf("Biggest chain: %d\n", biggest_chain);
 
 				break;

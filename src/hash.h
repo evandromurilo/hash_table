@@ -15,13 +15,13 @@
 struct Hashtable {
 	int size;
 	int stored;
-	struct Node **values;
+	struct HashNode **values;
 };
 
-struct Node {
+struct HashNode {
 	void *value;
 	char *key;
-	struct Node *next;
+	struct HashNode *next;
 };
 
 // sdbm: a hash function
@@ -39,8 +39,9 @@ unsigned long fnv1a(unsigned char *str);
 // hash_function: calls the DEFAULT_HASH_FUNCTION
 unsigned long hash_function(unsigned char *str);
 
-// hash_initis: initializes a hashtable
-void hash_init(struct Hashtable *table);
+// hash_init: initializes a hashtable
+// returns a pointer to the initialized hashtable
+struct Hashtable *hash_init();
 
 // hash_expand: roughly doubles the hashtable size
 // called when load_factor >= 0.7
@@ -51,21 +52,12 @@ void hash_add(struct Hashtable *table, char *key, void *value);
 
 // hash_getn: gets a node from the hashtable
 // returns NULL if key is not present
-struct Node *hash_getn(struct Hashtable *table, char *key);
+struct HashNode *hash_getn(struct Hashtable *table, char *key);
 
 // hash_getv: gets a value from the hashtable
 // returns 0.0 if key is not present
 void *hash_getv(struct Hashtable *table, char *key);
 
-// prepend: sets new->next to head, then swaps head for new
-void prepend(struct Node **head, struct Node *new);
-
-// hash_remve: removes key-value from hashtable
-// returns 0 on success, 1 if key is not present
-int hash_remove(struct Hashtable *table, char *key);
-
-// is_prime: returns true if n is prime
-bool is_prime(int n);
-
-// next_prime: returns the next prime closest to n
-int next_prime(int n);
+// hash_remove: removes key-value from hashtable
+// returns the value removed
+void *hash_remove(struct Hashtable *table, char *key);

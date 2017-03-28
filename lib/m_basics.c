@@ -52,9 +52,9 @@ int push_char(int c) {
 	return c;
 }
 
-int read(char *arr, int max) {
+int readn(char *arr, int n) {
 	int c, i = 0;
-	while (i < max && (c = read_char()) != EOF) arr[i++] = c;
+	while (i < n && (c = read_char()) != EOF) arr[i++] = c;
 
 	arr[i] = '\0';
 	return i;
@@ -113,6 +113,16 @@ int read_until(int goal, char* str, int size) {
 	return i;
 }
 
+bool char_in_string(char c, char *goals) {
+	while (*goals != '\0') {
+		if (*goals == c) {
+			return true;
+		}
+		goals++;
+	}
+	return false;
+}
+
 #define MAX_WORD_SIZE 100
 int split(char** arr, int size, char* str, char goal) {
 	char word[MAX_WORD_SIZE+1];
@@ -136,4 +146,33 @@ int split(char** arr, int size, char* str, char goal) {
 	}
 
 	return total;
+}
+
+bool is_prime(int n) {
+	if (n == 2) return true;
+	if (n == 3) return true;
+	if (n % 2 == 0) return false;
+	if (n % 3 == 0) return false;
+
+	int i = 5;
+	int w = 2;
+
+	while (i*i <= n) { // would it be better to calculate sqrt of n?
+		if (n % i == 0) return false;
+		i += w;
+		w = 6-w; // alterns between 2 and 4, skipping multiples of 2 and 3
+	}
+	return true;
+}
+
+int next_prime(int n) {
+	if (n%2==0) ++n;
+	else n+=2;
+
+	int w = 2;
+	while (true) {
+		if (is_prime(n)) return n;
+		n += w;
+		w = 6-w;
+	}
 }

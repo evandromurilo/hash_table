@@ -12,9 +12,9 @@ int len(char *s);
 // concat: concatenates 'a' and 'b', returns a new string
 char *concat(char *a, char *b);
 
-// read: reads up to 'max' chars into the string 'arr'
+// readn: reads up to 'n' chars into the string 'arr'
 // returns the amount of chars read
-/* int read(char *arr, int max); */
+int readn(char *arr, int n);
 
 // read_line: reads in the string 'arr' until '\n' or 'EOF' is found
 // or 'size'-1 chars are read
@@ -51,9 +51,17 @@ int discard_while(char *goals);
 // returns the amount of chars read
 int read_until(int goal, char* str, int size);
 
+bool char_in_string(char c, char *goals);
+
 // split: splits 'str' into various strings with 'goal' being the separator
 // strings are stored in the array 'arr' of size 'size'
 // returns the resulting amount of strings
 int split(char** arr, int size, char* str, char goal);
+
+// is_prime: returns true if n is prime
+bool is_prime(int n);
+
+// next_prime: returns the next prime closest to n
+int next_prime(int n);
 
 #endif
