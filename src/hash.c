@@ -5,7 +5,11 @@
 #include "hash.h"
 
 // prepend: sets new->next to head, then swaps head for new
-void prepend(struct HashNode **head, struct HashNode *new);
+static void prepend(struct HashNode **head, struct HashNode *new);
+
+// hash_expand: roughly doubles the hashtable size
+// called when load_factor >= 0.7
+static void hash_expand(struct Hashtable *table);
 
 unsigned long hash_function(unsigned char *str) {
 	return DEFAULT_HASH_FUNCTION(str);
@@ -75,7 +79,7 @@ void hash_add(struct Hashtable *table, char *key, void *value) {
 	}
 }
 
-void hash_expand(struct Hashtable *table) {
+static void hash_expand(struct Hashtable *table) {
 	if (DEBUG) printf("Expanding hashtable.\n");
 	int n_size = next_prime(table->size * 2);
 	struct HashNode **n_values = malloc(sizeof(struct HashNode*) * n_size);
@@ -119,7 +123,7 @@ void *hash_getv(struct Hashtable *table, char *key) {
 	return curr == NULL ? NULL : curr->value;
 }
 
-void prepend(struct HashNode **head, struct HashNode *new) {
+static void prepend(struct HashNode **head, struct HashNode *new) {
 	new->next = *head;
 	*head = new;
 }

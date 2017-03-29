@@ -41,10 +41,6 @@ unsigned long hash_function(unsigned char *str);
 // returns a pointer to the initialized hashtable
 struct Hashtable *hash_init();
 
-// hash_expand: roughly doubles the hashtable size
-// called when load_factor >= 0.7
-void hash_expand(struct Hashtable *table);
-
 // hash_add: adds key-value to the hashtable
 void hash_add(struct Hashtable *table, char *key, void *value);
 
