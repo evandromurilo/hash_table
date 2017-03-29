@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "../lib/m_basics.h"
 #include "hash.h"
 
 // prepend: sets new->next to head, then swaps head for new

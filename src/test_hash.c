@@ -1,6 +1,9 @@
 /* Test function for the hash table, kind-of half-assed, maybe I will improve it later
  * loads the file hash_inserts_100.txt before giving control to the user */
 
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "hash.h"
 

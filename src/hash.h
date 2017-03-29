@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "../lib/m_basics.h"
+#ifndef HASH_H
+#define HASH_H
 
 #ifndef DEBUG
 #define DEBUG 0
@@ -61,3 +59,5 @@ void *hash_getv(struct Hashtable *table, char *key);
 // hash_remove: removes key-value from hashtable
 // returns the value removed
 void *hash_remove(struct Hashtable *table, char *key);
+
+#endif
