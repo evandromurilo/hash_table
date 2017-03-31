@@ -56,4 +56,7 @@ void *hash_getv(struct Hashtable *table, char *key);
 // returns the value removed
 void *hash_remove(struct Hashtable *table, char *key);
 
+// hash_destroy: disalloc the hash with its keys and values
+void hash_destroy(struct Hashtable *table);
+
 #endif

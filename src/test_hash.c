@@ -72,6 +72,7 @@ int main(void) {
 
 				break;
 			case EXIT:
+				hash_destroy(table);	
 				return 0;
 		}
 		putchar('\n');
@@ -79,4 +80,3 @@ int main(void) {
 
 	return 0;
 }
-

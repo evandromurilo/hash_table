@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "../lib/m_basics.h"
 #include "hash.h"
 
@@ -87,7 +88,7 @@ static void hash_expand(struct Hashtable *table) {
 	for (int i = 0; i < n_size; ++i) n_values[i] = NULL;
 
 	for (int i = 0; i < table->size; ++i) {
-		struct HashNode* curr = table->values[i];
+		struct HashNode *curr = table->values[i];
 
 		while (curr != NULL) {
 			int ni = hash_function(curr->key) % n_size;
@@ -100,6 +101,7 @@ static void hash_expand(struct Hashtable *table) {
 	}
 
 	table->size = n_size;
+	free(table->values);
 	table->values = n_values;
 }
 
@@ -151,4 +153,21 @@ void *hash_remove(struct Hashtable *table, char *key) {
 	--(table->stored);
 
 	return value;
+}
+
+void hash_destroy(struct Hashtable *table) {
+	for (int i = 0; i < table->size; ++i) {
+		struct HashNode *curr = table->values[i];
+
+		while (curr != NULL) {
+			struct HashNode *temp = curr;
+			curr = curr->next;
+			free(temp->key);
+			free(temp->value);
+			free(temp);
+		}
+	}
+
+	free(table->values);
+	free(table);
 }
